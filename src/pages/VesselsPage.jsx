@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 
 export default function VesselsPage() {
-  const { plan, inputs, destinationPorts } = useFreight();
+  const { plan, inputs, destinationPorts, setActiveTab } = useFreight();
   const { vesselOptions, recommendedVessel, destination, cargo } = plan;
   const [selectedVesselId, setSelectedVesselId] = useState(recommendedVessel.id);
 
@@ -46,18 +46,28 @@ export default function VesselsPage() {
             </p>
           </div>
 
-          <div className="bg-sail-900/90 border border-cyan-500/30 rounded-xl p-3.5 flex items-center gap-3">
-            <div className="p-2 bg-emerald-500/20 text-emerald-400 rounded-lg">
-              <Award className="w-5 h-5" />
-            </div>
-            <div>
-              <span className="text-[10px] text-slate-400 uppercase font-semibold">Top Ranked Charter</span>
-              <div className="text-sm font-bold text-white font-mono">
-                {recommendedVessel.vesselName} ({recommendedVessel.vesselType})
+          <div className="flex items-center gap-3 flex-wrap">
+            <button
+              onClick={() => setActiveTab('digital-twin')}
+              className="flex items-center gap-2 bg-gradient-to-r from-cyan-600 to-sail-600 hover:from-cyan-500 hover:to-sail-500 text-white text-xs font-bold px-4 py-3 rounded-xl shadow-glow-sm transition-all"
+            >
+              <Compass className="w-4 h-4 text-cyan-200" />
+              <span>Launch Digital Twin</span>
+            </button>
+
+            <div className="bg-sail-900/90 border border-cyan-500/30 rounded-xl p-3 flex items-center gap-3">
+              <div className="p-2 bg-emerald-500/20 text-emerald-400 rounded-lg">
+                <Award className="w-5 h-5" />
               </div>
-              <span className="text-[11px] text-emerald-300">
-                Suitability Score: {recommendedVessel.suitabilityScore}/100
-              </span>
+              <div>
+                <span className="text-[10px] text-slate-400 uppercase font-semibold">Top Ranked Charter</span>
+                <div className="text-sm font-bold text-white font-mono">
+                  {recommendedVessel.vesselName} ({recommendedVessel.vesselType})
+                </div>
+                <span className="text-[11px] text-emerald-300">
+                  Suitability Score: {recommendedVessel.suitabilityScore}/100
+                </span>
+              </div>
             </div>
           </div>
         </div>

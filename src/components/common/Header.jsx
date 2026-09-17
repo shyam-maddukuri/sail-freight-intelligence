@@ -31,7 +31,10 @@ export default function Header() {
     forecast: 'Freight Forecast',
     vessels: 'Vessel Selection',
     routes: 'Port & Route Optimizer',
+    strategy: 'AI Chartering Strategy Simulator',
+    'digital-twin': 'Port & Vessel Digital Twin',
     risk: 'Risk Analysis',
+    agent: 'Explainable AI Procurement Agent',
     recommendation: 'Optimal Strategy',
     reports: 'Reports & Audits'
   };

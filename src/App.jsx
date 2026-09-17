@@ -9,7 +9,10 @@ import ProcurementPage from './pages/ProcurementPage';
 import ForecastPage from './pages/ForecastPage';
 import VesselsPage from './pages/VesselsPage';
 import RouteOptimizationPage from './pages/RouteOptimizationPage';
+import CharteringSimulatorPage from './pages/CharteringSimulatorPage';
+import DigitalTwinPage from './pages/DigitalTwinPage';
 import RiskAnalysisPage from './pages/RiskAnalysisPage';
+import ExplainableAgentPage from './pages/ExplainableAgentPage';
 import FinalRecommendationPage from './pages/FinalRecommendationPage';
 import ReportsPage from './pages/ReportsPage';
 
@@ -20,7 +23,10 @@ import {
   Ship, 
   CheckCircle2, 
   MapPin, 
-  AlertTriangle 
+  AlertTriangle,
+  Sliders,
+  Compass,
+  Bot
 } from 'lucide-react';
 
 export default function App() {
@@ -38,8 +44,14 @@ export default function App() {
         return <VesselsPage />;
       case 'routes':
         return <RouteOptimizationPage />;
+      case 'strategy':
+        return <CharteringSimulatorPage />;
+      case 'digital-twin':
+        return <DigitalTwinPage />;
       case 'risk':
         return <RiskAnalysisPage />;
+      case 'agent':
+        return <ExplainableAgentPage />;
       case 'recommendation':
         return <FinalRecommendationPage />;
       case 'reports':

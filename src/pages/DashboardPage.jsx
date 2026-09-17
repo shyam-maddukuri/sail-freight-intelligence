@@ -17,23 +17,27 @@ import {
   Compass, 
   FileText,
   ChevronRight,
-  ExternalLink
+  ExternalLink,
+  Sliders,
+  Bot
 } from 'lucide-react';
 import { PAST_BENCHMARK_RUNS } from '../data/sampleData';
 
 export default function DashboardPage() {
   const { plan, setActiveTab, setIsDossierOpen } = useFreight();
-  const { metrics, recommendedVessel, destination, origin, cargo } = plan;
+  const { metrics, recommendedVessel, destination, origin, cargo, charterStrategies } = plan;
 
   const workflowSteps = [
-    { label: 'Cargo Procurement', id: 'procurement', status: 'Optimal' },
-    { label: 'Freight Forecasting', id: 'forecast', status: `+$${(metrics.forecastFreightRateUsd - metrics.currentFreightRateUsd).toFixed(2)}` },
-    { label: 'Shipment Planning', id: 'dashboard', status: `${Number(plan.inputs.quantity).toLocaleString()} MT` },
-    { label: 'Vessel Selection', id: 'vessels', status: recommendedVessel.vesselType },
-    { label: 'Port & Route', id: 'routes', status: destination.name.split(' ')[0] },
-    { label: 'Cost Estimation', id: 'recommendation', status: `₹${metrics.estimatedTotalCostInrCr} Cr` },
-    { label: 'Risk Prediction', id: 'risk', status: `${metrics.overallRiskScore}/100` },
-    { label: 'Final Recommendation', id: 'recommendation', status: 'Ready' }
+    { label: 'Historical Data', id: 'reports', status: 'Ingested' },
+    { label: 'Demand Forecast', id: 'procurement', status: `${Number(plan.inputs.quantity).toLocaleString()} MT` },
+    { label: 'Freight Forecast', id: 'forecast', status: `+$${(metrics.forecastFreightRateUsd - metrics.currentFreightRateUsd).toFixed(2)}` },
+    { label: 'Vessel Match', id: 'vessels', status: recommendedVessel.vesselType },
+    { label: 'Cost Optimization', id: 'procurement', status: `₹${metrics.estimatedTotalCostInrCr} Cr` },
+    { label: 'Charter Simulator', id: 'strategy', status: charterStrategies?.recommendedStrategy?.name?.split(' ')[0] || 'Period' },
+    { label: 'Digital Twin', id: 'digital-twin', status: `${metrics.expectedTransitDays}d Turn` },
+    { label: 'Risk / What-If', id: 'risk', status: `${metrics.overallRiskScore}/100` },
+    { label: 'AI Agent', id: 'agent', status: '10-Pillar' },
+    { label: 'SAIL Decision', id: 'recommendation', status: 'Optimal' }
   ];
 
   return (
@@ -63,11 +67,11 @@ export default function DashboardPage() {
 
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setActiveTab('recommendation')}
+              onClick={() => setActiveTab('agent')}
               className="flex items-center gap-2 bg-gradient-to-r from-cyan-600 to-sail-600 hover:from-cyan-500 hover:to-sail-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-glow-sm transition-all"
             >
-              <Sparkles className="w-4 h-4 text-cyan-200" />
-              <span>View Optimal Strategy</span>
+              <Bot className="w-4 h-4 text-cyan-200" />
+              <span>AI Procurement Agent</span>
             </button>
             <button
               onClick={() => setIsDossierOpen(true)}
@@ -79,14 +83,14 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Dynamic Workflow Stage Stepper */}
+        {/* Dynamic Workflow Stage Stepper (10 Stages) */}
         <div className="mt-6 pt-4 border-t border-sail-800/80">
           <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2.5 flex items-center justify-between">
-            <span>Decision Support Pipeline Flow</span>
+            <span>Decision Support Pipeline Flow (10 End-to-End Stages)</span>
             <span className="text-cyan-400 font-mono text-[10px]">AI Pipeline: End-to-End Synchronized</span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-10 gap-2">
             {workflowSteps.map((step, idx) => (
               <button
                 key={idx}
@@ -94,10 +98,10 @@ export default function DashboardPage() {
                 className="bg-sail-900/90 hover:bg-sail-800/90 border border-sail-700/50 hover:border-cyan-500/40 rounded-lg p-2 text-left transition-all group"
               >
                 <div className="flex items-center justify-between text-[10px] text-slate-400 mb-0.5">
-                  <span className="font-mono">0{idx + 1}</span>
+                  <span className="font-mono">{idx + 1 < 10 ? `0${idx + 1}` : idx + 1}</span>
                   <CheckCircle2 className="w-3 h-3 text-cyan-400" />
                 </div>
-                <div className="text-[11px] font-bold text-slate-200 group-hover:text-white truncate">
+                <div className="text-[10.5px] font-bold text-slate-200 group-hover:text-white truncate">
                   {step.label}
                 </div>
                 <div className="text-[10px] text-cyan-300 font-mono truncate mt-0.5">
@@ -192,6 +196,98 @@ export default function DashboardPage() {
 
       {/* Shipment Planning Input Section */}
       <ShipmentPlanForm />
+
+      {/* 3 Advanced AI Capabilities Showcase Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        
+        {/* Card 1: AI Chartering Strategy Simulator */}
+        <div 
+          onClick={() => setActiveTab('strategy')}
+          className="bg-gradient-to-br from-[#0a1835] to-[#081224] border border-cyan-500/40 hover:border-cyan-400 rounded-2xl p-5 shadow-card-dark cursor-pointer transition-all group flex flex-col justify-between"
+        >
+          <div>
+            <div className="flex items-center justify-between pb-3 border-b border-sail-800">
+              <span className="text-[10px] font-black uppercase tracking-wider text-cyan-400 bg-cyan-500/20 px-2 py-0.5 rounded border border-cyan-500/40">
+                FEATURE 1 • STRATEGY
+              </span>
+              <span className="text-xs font-mono text-emerald-400 font-bold">What-If Enabled</span>
+            </div>
+            <h3 className="text-base font-bold text-white mt-3 group-hover:text-cyan-300 transition-colors flex items-center gap-2">
+              <Sliders className="w-4 h-4 text-cyan-400" />
+              Chartering Strategy Simulator
+            </h3>
+            <p className="text-xs text-slate-300 mt-1.5 leading-relaxed">
+              Compare <strong className="text-white">Spot</strong> vs <strong className="text-white">Short-Term Period</strong> vs <strong className="text-white">COA</strong> contracts. Includes interactive rate and parcel What-If sensitivity sliders.
+            </p>
+          </div>
+
+          <div className="mt-4 pt-3 border-t border-sail-800/80 flex items-center justify-between text-xs">
+            <span className="text-slate-400 font-medium">Recommended: <strong className="text-emerald-300">{charterStrategies?.recommendedStrategy?.name || 'Short-Term'}</strong></span>
+            <span className="text-cyan-400 font-bold group-hover:translate-x-1 transition-transform flex items-center gap-1">
+              <span>Simulate</span> <ArrowRight className="w-3.5 h-3.5" />
+            </span>
+          </div>
+        </div>
+
+        {/* Card 2: Port & Vessel Digital Twin */}
+        <div 
+          onClick={() => setActiveTab('digital-twin')}
+          className="bg-gradient-to-br from-[#0a1835] to-[#081224] border border-sail-700/60 hover:border-emerald-500/50 rounded-2xl p-5 shadow-card-dark cursor-pointer transition-all group flex flex-col justify-between"
+        >
+          <div>
+            <div className="flex items-center justify-between pb-3 border-b border-sail-800">
+              <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded border border-emerald-500/40">
+                FEATURE 2 • DIGITAL TWIN
+              </span>
+              <span className="text-xs font-mono text-cyan-400 font-bold">{metrics.expectedTransitDays}d Turnaround</span>
+            </div>
+            <h3 className="text-base font-bold text-white mt-3 group-hover:text-emerald-300 transition-colors flex items-center gap-2">
+              <Compass className="w-4 h-4 text-emerald-400" />
+              Port & Vessel Digital Twin
+            </h3>
+            <p className="text-xs text-slate-300 mt-1.5 leading-relaxed">
+              Interactive voyage journey: <strong className="text-white">Loading ➔ Sea Steaming ➔ Port Arrival ➔ Discharge</strong>. Evaluates draft clearances, physical limits, and idle delays.
+            </p>
+          </div>
+
+          <div className="mt-4 pt-3 border-t border-sail-800/80 flex items-center justify-between text-xs">
+            <span className="text-slate-400 font-medium">Status: <strong className="text-emerald-400">100% Compatible</strong></span>
+            <span className="text-emerald-400 font-bold group-hover:translate-x-1 transition-transform flex items-center gap-1">
+              <span>Launch Twin</span> <ArrowRight className="w-3.5 h-3.5" />
+            </span>
+          </div>
+        </div>
+
+        {/* Card 3: Explainable AI Procurement Agent */}
+        <div 
+          onClick={() => setActiveTab('agent')}
+          className="bg-gradient-to-br from-[#0a1835] to-[#081224] border border-cyan-500/40 hover:border-indigo-400 rounded-2xl p-5 shadow-card-dark cursor-pointer transition-all group flex flex-col justify-between"
+        >
+          <div>
+            <div className="flex items-center justify-between pb-3 border-b border-sail-800">
+              <span className="text-[10px] font-black uppercase tracking-wider text-cyan-400 bg-cyan-500/20 px-2 py-0.5 rounded border border-cyan-500/40">
+                FEATURE 3 • AGENTIC AI
+              </span>
+              <span className="text-xs font-mono text-cyan-300 font-bold">10-Point Synthesis</span>
+            </div>
+            <h3 className="text-base font-bold text-white mt-3 group-hover:text-cyan-300 transition-colors flex items-center gap-2">
+              <Bot className="w-4 h-4 text-cyan-400" />
+              Explainable Procurement Agent
+            </h3>
+            <p className="text-xs text-slate-300 mt-1.5 leading-relaxed">
+              Synthesizes all 7 upstream stages into a structured executive directive with data-grounded rationale and transparent negative alternative validation.
+            </p>
+          </div>
+
+          <div className="mt-4 pt-3 border-t border-sail-800/80 flex items-center justify-between text-xs">
+            <span className="text-slate-400 font-medium">Directive: <strong className="text-cyan-300">Audited & Ready</strong></span>
+            <span className="text-cyan-400 font-bold group-hover:translate-x-1 transition-transform flex items-center gap-1">
+              <span>Review Memo</span> <ArrowRight className="w-3.5 h-3.5" />
+            </span>
+          </div>
+        </div>
+
+      </div>
 
       {/* Flagship Recommendation Quick Hero Preview */}
       <div className="bg-gradient-to-br from-[#0a1835] via-[#09152b] to-[#070f20] border border-cyan-500/40 rounded-2xl p-5 shadow-card-dark flex flex-col md:flex-row md:items-center md:justify-between gap-5">

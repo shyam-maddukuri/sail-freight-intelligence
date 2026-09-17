@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState } from 'react';
-import { calculateOptimizationPlan } from '../utils/calculationEngine';
-import { CARGO_TYPES, ORIGIN_PORTS, DESTINATION_PORTS } from '../data/sampleData';
+import React, { createContext, useContext, useState, useMemo } from 'react';
+import { calculateOptimizationPlan, calculateCharteringStrategies, simulateDigitalTwinJourney } from '../utils/calculationEngine';
+import { CARGO_TYPES, ORIGIN_PORTS, DESTINATION_PORTS, FLEET_VESSELS } from '../data/sampleData';
 
 const FreightContext = createContext();
 
@@ -24,6 +24,61 @@ export function FreightProvider({ children }) {
   // Current Optimization Plan Results
   const [plan, setPlan] = useState(() => calculateOptimizationPlan(inputs));
 
+  // Feature 1: What-If Sandbox State for Chartering Strategy Simulator
+  const [whatIfOverrides, setWhatIfOverrides] = useState({
+    rateDelta: 0,
+    quantity: 50000,
+    laycanDaysOffset: 0
+  });
+
+  // Feature 2: Digital Twin Selected Vessel & Port State
+  const [digitalTwinSelection, setDigitalTwinSelection] = useState({
+    vesselId: plan.recommendedVessel.id,
+    destinationId: plan.destination.id
+  });
+
+  // Dynamic live chartering strategies with What-If applied
+  const liveCharterStrategies = useMemo(() => {
+    return calculateCharteringStrategies({
+      inputs,
+      baseRatePerMt: plan.metrics.forecastFreightRateUsd,
+      totalTransitDays: plan.metrics.expectedTransitDays,
+      totalLandedCostInrCr: plan.metrics.estimatedTotalCostInrCr,
+      riskAssessment: plan.riskAssessment,
+      recommendedVessel: plan.recommendedVessel,
+      origin: plan.origin,
+      destination: plan.destination,
+      pctChange: plan.metrics.expectedFreightChangePct,
+      quantity: inputs.quantity,
+      whatIfOverrides
+    });
+  }, [plan, whatIfOverrides, inputs.quantity]);
+
+  // Dynamic live Digital Twin simulation with interactive vessel & port selection
+  const liveDigitalTwin = useMemo(() => {
+    const activeVessel = FLEET_VESSELS.find(v => v.id === digitalTwinSelection.vesselId) || plan.recommendedVessel;
+    const activeDest = DESTINATION_PORTS.find(p => p.id === digitalTwinSelection.destinationId) || plan.destination;
+    return simulateDigitalTwinJourney({
+      vessel: activeVessel,
+      origin: plan.origin,
+      destination: activeDest,
+      quantity: inputs.quantity,
+      shipmentDate: inputs.shipmentDate
+    });
+  }, [digitalTwinSelection, plan.origin, plan.destination, plan.recommendedVessel, inputs.quantity, inputs.shipmentDate]);
+
+  const updateWhatIf = (key, value) => {
+    setWhatIfOverrides(prev => ({ ...prev, [key]: value }));
+  };
+
+  const resetWhatIf = () => {
+    setWhatIfOverrides({
+      rateDelta: 0,
+      quantity: inputs.quantity,
+      laycanDaysOffset: 0
+    });
+  };
+
   // Recalculate plan with realistic loading state for demos
   const updatePlan = (newInputs = inputs) => {
     setIsCalculating(true);
@@ -31,6 +86,15 @@ export function FreightProvider({ children }) {
       const calculated = calculateOptimizationPlan(newInputs);
       setPlan(calculated);
       setInputs(newInputs);
+      setWhatIfOverrides({
+        rateDelta: 0,
+        quantity: newInputs.quantity,
+        laycanDaysOffset: 0
+      });
+      setDigitalTwinSelection({
+        vesselId: calculated.recommendedVessel.id,
+        destinationId: calculated.destination.id
+      });
       setIsCalculating(false);
       setLastCalculatedAt(new Date().toLocaleTimeString());
     }, 600); // 600ms responsive feedback
@@ -105,7 +169,15 @@ export function FreightProvider({ children }) {
         loadPreset,
         cargoTypes: CARGO_TYPES,
         originPorts: ORIGIN_PORTS,
-        destinationPorts: DESTINATION_PORTS
+        destinationPorts: DESTINATION_PORTS,
+        fleetVessels: FLEET_VESSELS,
+        whatIfOverrides,
+        updateWhatIf,
+        resetWhatIf,
+        liveCharterStrategies,
+        digitalTwinSelection,
+        setDigitalTwinSelection,
+        liveDigitalTwin
       }}
     >
       {children}

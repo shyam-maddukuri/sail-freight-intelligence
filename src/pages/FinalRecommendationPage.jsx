@@ -49,20 +49,32 @@ export default function FinalRecommendationPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 flex-wrap">
           <button
-            onClick={() => setIsDossierOpen(true)}
-            className="flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-glow-sm transition-all"
+            onClick={() => setActiveTab('agent')}
+            className="flex items-center gap-2 bg-gradient-to-r from-cyan-600 to-sail-600 hover:from-cyan-500 hover:to-sail-500 text-white text-xs font-bold px-3.5 py-2.5 rounded-xl shadow-glow-sm transition-all"
           >
-            <Download className="w-4 h-4" />
-            <span>Download Report</span>
+            <Sparkles className="w-4 h-4 text-cyan-200" />
+            <span>AI Agent Memo</span>
           </button>
           <button
-            onClick={() => setActiveTab('vessels')}
-            className="flex items-center gap-2 bg-sail-800 hover:bg-sail-700 text-slate-200 text-xs font-bold px-4 py-2.5 rounded-xl border border-sail-600 transition-colors"
+            onClick={() => setActiveTab('strategy')}
+            className="flex items-center gap-2 bg-sail-800 hover:bg-sail-700 text-slate-200 text-xs font-bold px-3 py-2.5 rounded-xl border border-sail-600 transition-colors"
           >
-            <Layers className="w-4 h-4 text-cyan-400" />
-            <span>View Detailed Analysis</span>
+            <span>Charter Simulator</span>
+          </button>
+          <button
+            onClick={() => setActiveTab('digital-twin')}
+            className="flex items-center gap-2 bg-sail-800 hover:bg-sail-700 text-slate-200 text-xs font-bold px-3 py-2.5 rounded-xl border border-sail-600 transition-colors"
+          >
+            <span>Digital Twin</span>
+          </button>
+          <button
+            onClick={() => setIsDossierOpen(true)}
+            className="flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold px-3.5 py-2.5 rounded-xl shadow-glow-sm transition-all"
+          >
+            <Download className="w-4 h-4" />
+            <span>Dossier</span>
           </button>
         </div>
       </div>

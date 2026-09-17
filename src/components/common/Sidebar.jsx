@@ -10,6 +10,10 @@ import {
   CheckCircle2, 
   FileSpreadsheet,
   Sparkles,
+  Sliders,
+  Compass,
+  Bot,
+  BrainCircuit,
   X
 } from 'lucide-react';
 
@@ -41,7 +45,7 @@ export default function Sidebar() {
     {
       id: 'vessels',
       label: 'Vessel Selection',
-      subtitle: 'Chartering & Compatibility',
+      subtitle: 'Fleet & Compatibility',
       icon: Ship,
       badge: plan.recommendedVessel.vesselType
     },
@@ -53,6 +57,20 @@ export default function Sidebar() {
       badge: 'Map'
     },
     {
+      id: 'strategy',
+      label: 'Chartering Simulator',
+      subtitle: 'Spot vs Period vs COA',
+      icon: Sliders,
+      badge: 'What-If'
+    },
+    {
+      id: 'digital-twin',
+      label: 'Port & Vessel Twin',
+      subtitle: 'Voyage & Turnaround',
+      icon: Compass,
+      badge: 'Twin Sim'
+    },
+    {
       id: 'risk',
       label: 'Risk Analysis',
       subtitle: 'Multi-Factor & VaR Score',
@@ -60,12 +78,19 @@ export default function Sidebar() {
       badge: `${plan.riskAssessment.overallScore}/100`
     },
     {
+      id: 'agent',
+      label: 'AI Procurement Agent',
+      subtitle: '10-Point Synthesis',
+      icon: Bot,
+      badge: 'Agentic',
+      highlight: true
+    },
+    {
       id: 'recommendation',
       label: 'Final Recommendation',
       subtitle: 'Optimal Strategy Dossier',
       icon: CheckCircle2,
-      badge: 'AI Flagship',
-      highlight: true
+      badge: 'AI Flagship'
     },
     {
       id: 'reports',
